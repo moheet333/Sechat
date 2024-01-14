@@ -9,7 +9,7 @@ const initialState = {
   password: "",
 };
 
-function Register() {
+function Login() {
   const [values, setValues] = useState(initialState);
 
   const { username, register, isLoading, showAlert } = useGlobalContext();
@@ -67,4 +67,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Login;

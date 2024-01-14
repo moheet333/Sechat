@@ -2,6 +2,9 @@ import {
   SET_LOADING,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_ERROR,
+  SET_USER,
+  LOGIN_USER_ERROR,
+  LOGIN_USER_SUCCESS,
 } from "./actions";
 
 const reducer = (state, action) => {
@@ -26,6 +29,30 @@ const reducer = (state, action) => {
       isLoading: false,
       user: null,
       showAlert: true,
+    };
+  }
+
+  if (action.type === LOGIN_USER_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      user: action.payload,
+    };
+  }
+
+  if (action.type === LOGIN_USER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      user: null,
+    };
+  }
+
+  if (action.type === SET_USER) {
+    return {
+      ...state,
+      username: action.payload,
     };
   }
 
