@@ -30,9 +30,17 @@ function Register() {
     }
     register({ username, email, password });
   };
-
   return (
     <>
+      {showAlert && (
+        <p
+          style={{
+            color: "red",
+          }}
+        >
+          The username or email is already in use.
+        </p>
+      )}
       {username && <Navigate to="/" />}
       <div className="App">
         <form onSubmit={handleSubmit}>
@@ -60,7 +68,9 @@ function Register() {
             value={values.password}
             onChange={handleChange}
           />
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={isLoading}>
+            Submit
+          </button>
         </form>
       </div>
     </>

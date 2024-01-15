@@ -76,6 +76,7 @@ const AppProvider = ({ children }) => {
         ...state,
         setLoading,
         register,
+        login,
       }}
     >
       {children}

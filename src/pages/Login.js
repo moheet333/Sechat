@@ -4,15 +4,14 @@ import { useGlobalContext } from "../context/appContext";
 import { Navigate } from "react-router-dom";
 
 const initialState = {
-  username: "",
-  email: "",
+  identifier: "",
   password: "",
 };
 
 function Login() {
   const [values, setValues] = useState(initialState);
 
-  const { username, register, isLoading, showAlert } = useGlobalContext();
+  const { username, login, isLoading, showAlert } = useGlobalContext();
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -23,33 +22,34 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { username, email, password } = values;
-    if (!email || !username || !password) {
+    const { identifier, password } = values;
+    if (!identifier || !password) {
       toast.error("Please fill out all fields");
       return;
     }
-    register({ username, email, password });
+    login({ identifier, password });
   };
-
+  console.log(username);
   return (
     <>
+      {showAlert && (
+        <p
+          style={{
+            color: "red",
+          }}
+        >
+          Invalid username/email or password.
+        </p>
+      )}
       {username && <Navigate to="/" />}
       <div className="App">
         <form onSubmit={handleSubmit}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="identifier">Username/Email</label>
           <input
             type="text"
-            id="username"
-            name="username"
-            value={values.username}
-            onChange={handleChange}
-          />
-          <label htmlFor="email">Email</label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            value={values.email}
+            id="identifier"
+            name="identifier"
+            value={values.identifier}
             onChange={handleChange}
           />
           <label htmlFor="password">Password</label>
@@ -60,7 +60,9 @@ function Login() {
             value={values.password}
             onChange={handleChange}
           />
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={isLoading}>
+            Submit
+          </button>
         </form>
       </div>
     </>
