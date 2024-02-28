@@ -5,9 +5,26 @@ import {
   SET_USER,
   LOGIN_USER_ERROR,
   LOGIN_USER_SUCCESS,
+  SEARCH_USER_SUCCESS,
+  SEARCH_USER_ERROR,
 } from "./actions";
 
 const reducer = (state, action) => {
+  if (action.type === SEARCH_USER_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      searchNewUsers: action.payload,
+    };
+  }
+
+  if (action.type === SEARCH_USER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+    };
+  }
+
   if (action.type === SET_LOADING) {
     return {
       ...state,
@@ -52,7 +69,8 @@ const reducer = (state, action) => {
   if (action.type === SET_USER) {
     return {
       ...state,
-      username: action.payload,
+      isLoading: false,
+      user: action.payload,
     };
   }
 

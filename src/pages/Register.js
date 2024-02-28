@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useGlobalContext } from "../context/appContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const initialState = {
   username: "",
@@ -10,9 +10,11 @@ const initialState = {
 };
 
 function Register() {
+  const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
 
-  const { username, register, isLoading, showAlert } = useGlobalContext();
+  const { user, register, isLoading, showAlert, isAuthenticated } =
+    useGlobalContext();
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -28,7 +30,14 @@ function Register() {
       toast.error("Please fill out all fields");
       return;
     }
-    register({ username, email, password });
+
+    await register({ username, email, password });
+    if (showAlert) {
+      toast.error(`The username or email is already in use.`);
+    } else {
+      toast.success(`Welcome ${username}`);
+      user && navigate("/dashboard");
+    }
   };
   return (
     <>
@@ -41,7 +50,7 @@ function Register() {
           The username or email is already in use.
         </p>
       )}
-      {username && <Navigate to="/" />}
+      {isAuthenticated && <Navigate to="/" />}
       <div className="App">
         <form onSubmit={handleSubmit}>
           <label htmlFor="username">Username</label>

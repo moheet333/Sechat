@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useGlobalContext } from "../context/appContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const initialState = {
   identifier: "",
@@ -9,9 +9,11 @@ const initialState = {
 };
 
 function Login() {
+  const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
 
-  const { username, login, isLoading, showAlert } = useGlobalContext();
+  const { user, login, isLoading, showAlert, isAuthenticated } =
+    useGlobalContext();
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -27,9 +29,15 @@ function Login() {
       toast.error("Please fill out all fields");
       return;
     }
-    login({ identifier, password });
+    await login({ identifier, password });
+    if (showAlert) {
+      toast.error(`Invalid username/email or password`);
+    } else {
+      toast.success(`Welcome User`);
+      user && navigate("/dashboard");
+    }
   };
-  console.log(username);
+
   return (
     <>
       {showAlert && (
@@ -41,7 +49,7 @@ function Login() {
           Invalid username/email or password.
         </p>
       )}
-      {username && <Navigate to="/" />}
+      {isAuthenticated && <Navigate to="/" />}
       <div className="App">
         <form onSubmit={handleSubmit}>
           <label htmlFor="identifier">Username/Email</label>
