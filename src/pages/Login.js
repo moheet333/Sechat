@@ -29,12 +29,18 @@ function Login() {
       toast.error("Please fill out all fields");
       return;
     }
-    await login({ identifier, password });
-    if (showAlert) {
-      toast.error(`Invalid username/email or password`);
-    } else {
-      toast.success(`Welcome User`);
-      user && navigate("/dashboard");
+
+    try {
+      const response = await login({ identifier, password });
+
+      if (response.success) {
+        toast.success(`Welcome ${response.user.username}`);
+        navigate("/dashboard");
+      } else {
+        toast.error(`Invalid username/email or password`);
+      }
+    } catch (error) {
+      toast.error(`An error occurred during login`);
     }
   };
 

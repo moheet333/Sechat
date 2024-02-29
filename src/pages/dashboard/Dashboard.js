@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useGlobalContext } from "../../context/appContext";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const navigate = useNavigate();
-  const [searchUser, setSearchUser] = useState("");
-
   const {
     user: currentUser,
     isAuthenticated,
@@ -13,8 +10,11 @@ function Dashboard() {
     searchNewUsers,
   } = useGlobalContext();
 
+  const navigate = useNavigate();
+  const [searchUser, setSearchUser] = useState("");
+
   const handleChat = (user) => {
-    navigate(`/dashboard/chat/${currentUser.id + user.id}`);
+    navigate(`/dashboard/chat/${user.id}`);
   };
 
   useEffect(() => {

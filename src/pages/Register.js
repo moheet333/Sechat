@@ -31,14 +31,16 @@ function Register() {
       return;
     }
 
-    await register({ username, email, password });
-    if (showAlert) {
-      toast.error(`The username or email is already in use.`);
-    } else {
+    const response = await register({ username, email, password });
+
+    if (response.success) {
       toast.success(`Welcome ${username}`);
-      user && navigate("/dashboard");
+      navigate("/dashboard");
+    } else {
+      toast.error(`The username or email is already in use.`);
     }
   };
+
   return (
     <>
       {showAlert && (

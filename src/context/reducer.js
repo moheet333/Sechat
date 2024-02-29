@@ -7,6 +7,8 @@ import {
   LOGIN_USER_SUCCESS,
   SEARCH_USER_SUCCESS,
   SEARCH_USER_ERROR,
+  GET_CHAT_SUCCESS,
+  GET_CHAT_ERROR,
 } from "./actions";
 
 const reducer = (state, action) => {
@@ -15,6 +17,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       searchNewUsers: action.payload,
+      showAlert: false,
     };
   }
 
@@ -22,6 +25,7 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
+      showAlert: true,
     };
   }
 
@@ -30,13 +34,13 @@ const reducer = (state, action) => {
       ...state,
       isLoading: true,
       showAlert: false,
-      editComplete: false,
     };
   }
   if (action.type === REGISTER_USER_SUCCESS) {
     return {
       ...state,
       isLoading: false,
+      showAlert: false,
       user: action.payload,
     };
   }
@@ -54,6 +58,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       user: action.payload,
+      showAlert: false,
     };
   }
 
@@ -63,6 +68,24 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       user: null,
+    };
+  }
+
+  if (action.type === GET_CHAT_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      chat: action.payload,
+      showAlert: false,
+    };
+  }
+
+  if (action.type === GET_CHAT_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      chat: [],
     };
   }
 
