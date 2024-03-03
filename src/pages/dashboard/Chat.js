@@ -21,7 +21,10 @@ function Chat() {
   }, []);
 
   const [receiverId, setReceiverId] = useState(
-    window.location.pathname.split("/").pop()
+    window.location.pathname.split("/").pop().split("-")[0]
+  );
+  const [userId, setUserId] = useState(
+    window.location.pathname.split("/").pop().split("-")[1]
   );
   const [roomId, setRoomId] = useState();
   // user.id + Number(receiverId) + user.id * Number(receiverId)
@@ -31,7 +34,7 @@ function Chat() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (socket) {
-      socket.emit("message", { message, roomId, userId: user.id, receiverId });
+      socket.emit("message", { message, roomId, userId, receiverId });
       setMessage("");
     }
   };
@@ -59,29 +62,24 @@ function Chat() {
   useEffect(() => {
     if (roomId) {
       try {
-        console.log({ roomId });
         getChat({ roomId });
       } catch (error) {
         console.log(error);
       }
     }
-  }, [roomId, user]);
+  }, [roomId]);
 
   useEffect(() => {
-    if (user && receiverId) {
-      setRoomId(user.id + Number(receiverId) + user.id * Number(receiverId));
-    }
-  }, [user, receiverId]);
-
-  useEffect(() => {
-    if (user && receiverId) {
+    if (userId && receiverId) {
       const calculatedRoomId =
-        user.id + Number(receiverId) + user.id * Number(receiverId);
+        Number(userId) +
+        Number(receiverId) +
+        Number(userId) * Number(receiverId);
       if (!isNaN(calculatedRoomId) && calculatedRoomId !== undefined) {
         setRoomId(calculatedRoomId);
       }
     }
-  }, [user, receiverId]);
+  }, [userId, receiverId]);
 
   useEffect(() => {
     setMessages(chat);
@@ -94,7 +92,7 @@ function Chat() {
         <ul id="messages">
           {messages &&
             messages.map((message, index) => {
-              if (message.fromuser === user.id) {
+              if (message.fromuser == Number(userId)) {
                 return (
                   <li key={index} style={{ color: "blueviolet" }}>
                     {message.message}

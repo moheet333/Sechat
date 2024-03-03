@@ -3,18 +3,17 @@ import { useGlobalContext } from "../../context/appContext";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const {
-    user: currentUser,
-    isAuthenticated,
-    searchUsers,
-    searchNewUsers,
-  } = useGlobalContext();
+  const { isAuthenticated, searchUsers, searchNewUsers } = useGlobalContext();
+
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
 
   const navigate = useNavigate();
   const [searchUser, setSearchUser] = useState("");
 
   const handleChat = (user) => {
-    navigate(`/dashboard/chat/${user.id}`);
+    navigate(`/dashboard/chat/${user.id}-${currentUser.id}`);
   };
 
   useEffect(() => {

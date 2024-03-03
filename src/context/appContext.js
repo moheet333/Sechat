@@ -95,7 +95,6 @@ const AppProvider = ({ children }) => {
           roomId: userInput.roomId,
         },
       });
-      console.log(data.data);
       dispatch({ type: GET_CHAT_SUCCESS, payload: data.data });
     } catch (error) {
       dispatch({ type: GET_CHAT_ERROR });
