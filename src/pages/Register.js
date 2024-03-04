@@ -1,31 +1,46 @@
-import { useState } from "react";
 import { toast } from "react-toastify";
 import { useGlobalContext } from "../context/appContext";
 import { Navigate, useNavigate } from "react-router-dom";
-
-const initialState = {
-  username: "",
-  email: "",
-  password: "",
-};
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 
 function Register() {
   const navigate = useNavigate();
-  const [values, setValues] = useState(initialState);
 
-  const { user, register, isLoading, showAlert, isAuthenticated } =
-    useGlobalContext();
+  const { register, showAlert, isAuthenticated } = useGlobalContext();
 
-  const handleChange = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-
-    setValues({ ...values, [name]: value });
-  };
+  function Copyright(props) {
+    return (
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        align="center"
+        {...props}
+      >
+        {"Copyright © "}
+        <Link color="inherit" href="https://mui.com/">
+          Sechat
+        </Link>{" "}
+        {new Date().getFullYear()}
+        {"."}
+      </Typography>
+    );
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { username, email, password } = values;
+    const data = new FormData(event.currentTarget);
+    const username = data.get("username");
+    const email = data.get("email");
+    const password = data.get("password");
+
     if (!email || !username || !password) {
       toast.error("Please fill out all fields");
       return;
@@ -43,46 +58,81 @@ function Register() {
 
   return (
     <>
-      {showAlert && (
-        <p
-          style={{
-            color: "red",
-          }}
-        >
-          The username or email is already in use.
-        </p>
-      )}
       {isAuthenticated && <Navigate to="/" />}
       <div className="App">
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={values.username}
-            onChange={handleChange}
-          />
-          <label htmlFor="email">Email</label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={values.password}
-            onChange={handleChange}
-          />
-          <button type="submit" disabled={isLoading}>
-            Submit
-          </button>
-        </form>
+        <Container component="main" maxWidth="xs">
+          <Box
+            sx={{
+              marginTop: 8,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 3 }}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    name="username"
+                    autoComplete="username"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="new-password"
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link href="/login" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+          <Copyright sx={{ mt: 5 }} />
+        </Container>
       </div>
     </>
   );
