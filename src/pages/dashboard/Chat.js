@@ -2,9 +2,19 @@ import { useGlobalContext } from "../../context/appContext";
 import React, { useEffect, useMemo, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Avatar,
+  Grid,
+  Paper,
+} from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 
 function Chat() {
-  const { user, isAuthenticated, getChat, chat, setSocketInContext } =
+  const { isAuthenticated, getChat, chat, setSocketInContext } =
     useGlobalContext();
 
   const socket = useMemo(() => {
@@ -89,35 +99,94 @@ function Chat() {
     <>
       {!isAuthenticated && <Navigate to="/login" />}
       <div>
-        <ul id="messages">
-          {messages &&
-            messages.map((message, index) => {
-              if (message.fromuser == Number(userId)) {
-                return (
-                  <li key={index} style={{ color: "blueviolet" }}>
-                    {message.message}
-                  </li>
-                );
-              }
-              return (
-                <li key={index} style={{ color: "gray" }}>
-                  {message.message}
-                </li>
-              );
-            })}
-        </ul>
-        <form id="form" onSubmit={handleSubmit}>
-          <input
-            id="input"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            autoComplete="off"
-          />
-          <button type="submit">Send</button>
-        </form>
+        <Box
+          sx={{
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            bgcolor: "grey.200",
+          }}
+        >
+          <Box sx={{ flexGrow: 1, overflow: "auto", p: 2 }}>
+            {messages &&
+              messages.map((message) => (
+                <Message
+                  key={message.id}
+                  message={message}
+                  receiverId={receiverId}
+                />
+              ))}
+          </Box>
+          <Box sx={{ p: 2, backgroundColor: "background.default" }}>
+            <Grid container spacing={2}>
+              <Grid item xs={10}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  placeholder="Type a message"
+                  variant="outlined"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Button
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  endIcon={<SendIcon />}
+                  onClick={handleSubmit}
+                >
+                  Send
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
       </div>
     </>
   );
 }
+
+const Message = ({ message, receiverId }) => {
+  const isReceiver = message.fromuser === Number(receiverId);
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: isReceiver ? "flex-start" : "flex-end",
+        mb: 2,
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: isReceiver ? "row" : "row-reverse",
+          alignItems: "center",
+        }}
+      >
+        <Avatar
+          sx={{ bgcolor: isReceiver ? "primary.main" : "secondary.main" }}
+        >
+          {isReceiver ? "R" : "U"}
+        </Avatar>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            ml: isReceiver ? 1 : 0,
+            mr: isReceiver ? 0 : 1,
+            backgroundColor: isReceiver ? "primary.light" : "secondary.light",
+            borderRadius: isReceiver
+              ? "20px 20px 20px 5px"
+              : "20px 20px 5px 20px",
+          }}
+        >
+          <Typography variant="body1">{message.message}</Typography>
+        </Paper>
+      </Box>
+    </Box>
+  );
+};
 
 export default Chat;

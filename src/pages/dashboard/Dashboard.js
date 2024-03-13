@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../context/appContext";
 import { useNavigate } from "react-router-dom";
-import TextField from "@mui/material/TextField";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import List from "@mui/material/List";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -102,7 +101,7 @@ const SearchResultsContainer = styled("div")({
   zIndex: 999,
   backgroundColor: "#fff",
   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-  maxHeight: "200px",
+  maxHeight: "150px",
   overflowY: "auto",
   width: "100%",
   "& > .MuiList-root": {
@@ -201,11 +200,8 @@ function Dashboard() {
                         component="nav"
                         sx={{
                           backgroundColor: "#f0f0f0",
-                          borderRadius: "4px",
                           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                          padding: "0",
-                          maxHeight: "200px",
-                          overflowY: "auto",
+                          padding: 0,
                         }}
                       >
                         {searchNewUsers.map((result, index) => (
